@@ -12,4 +12,10 @@ public interface UserService {
     void updateUser(User user);
 
     void deleteUser(long id);
+
+    void addRoleToUser(String roleName, User user);
+
+    User findByUsername(String username);
+
+    User findById(Long id);
 }
