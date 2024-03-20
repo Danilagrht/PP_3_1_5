@@ -1,11 +1,70 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
 </head>
+
+<form method="post" action="/addUser" id="addUserForm" accept-charset="UTF-8"></form>
+
 <body>
-<h1>User, welcome spring boot security page!</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th></th>
+    </tr>
 
+    <tr th:each="user : ${users}">
+        <td th:text="${user.getId()}" contenteditable="true">ID</td>
+        <td th:text="${user.getName()}" contenteditable="true">Name</td>
+        <td th:text="${user.getEmail()}" contenteditable="true">Email</td>
+        <td>
+            <form method="post" th:action="@{'/deleteUser?id=' + ${user.getId()}}" accept-charset="UTF-8">
+                <input type="submit" value="&#10134;">
+            </form>
+        </td>
+    </tr>
 
+    <tr>
+        <td></td>
+        <td><input type="text" name="name" placeholder="name" form="addUserForm"></td>
+        <td><input type="text" name="email" placeholder="email" form="addUserForm"></td>
+        <td><input type="submit" value="&#10133;" form="addUserForm"></td>
+    </tr>
+</table>
+
+<br>
+
+<form method="post" action="/updateUser">
+    <h3>Editor</h3>
+    <label>
+        <input type="number" name="id" placeholder="id">
+    </label>
+    <br/>
+    <label>
+        <input type="text" name="name" placeholder="name">
+    </label>
+    <br/>
+    <label>
+        <input type="text" name="email" placeholder="email">
+    </label>
+    <br/>
+    <br/>
+    <input type="submit" value="Submit">
+</form>
 </body>
 </html>
