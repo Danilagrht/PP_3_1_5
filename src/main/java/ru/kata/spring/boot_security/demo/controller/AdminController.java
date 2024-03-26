@@ -28,18 +28,18 @@ public class AdminController {
     public String addNewUser(@RequestParam String name, @RequestParam String email, @RequestParam String username, @RequestParam String password) {
         User user = new User(name, email, username, password);
         userService.saveUser(user);
-        userService.addRoleToUser("ROLE_USER", user);
         return "redirect:/admin";
     }
 
     @PostMapping(value = "/admin/updateUser")
     public String updateUser(@RequestParam Long id, @RequestParam String name, @RequestParam String email, @RequestParam String username, @RequestParam String password) {
-        User user = userService.findById(id);
+        User user = new User(name, email, username, password);
+        /*User user = userService.findById(id);
         user.setName(name);
         user.setEmail(email);
         user.setUsername(username);
-        user.setPassword(password);
-        userService.updateUser(user);
+        user.setPassword(password);*/
+        userService.updateUser(user, id);
         return "redirect:/admin";
     }
 
