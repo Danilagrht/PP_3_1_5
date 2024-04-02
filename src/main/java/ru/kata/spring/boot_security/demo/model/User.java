@@ -8,9 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
@@ -46,6 +44,17 @@ public class User implements UserDetails {
         this.username = username;
         this.password = password;
         this.isEnabled = true;
+    }
+
+    public String getHighRole() {
+        List<Role> sortedRoles = new ArrayList<>(roles);
+        Collections.sort(sortedRoles, Comparator.comparing(Role::getName));
+
+        if (!sortedRoles.isEmpty()) {
+            return sortedRoles.get(0).getName();
+        } else {
+            return "No roles assigned";
+        }
     }
 
     @Override

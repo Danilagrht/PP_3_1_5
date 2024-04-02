@@ -27,6 +27,7 @@
         <th>Email</th>
         <th>Username</th>
         <th>Password</th>
+        <th>Role</th>
         <th></th>
     </tr>
 
@@ -36,6 +37,7 @@
         <td th:text="${user.getEmail()}" contenteditable="true">Email</td>
         <td th:text="${user.getUsername()}" contenteditable="true">Username</td>
         <td th:text="'********'" contenteditable="true">Password</td>
+        <td th:text="${user.getHighRole()}" contenteditable="true">Role</td>
         <td>
             <form method="post" th:action="@{'/admin/deleteUser?id=' + ${user.getId()}}" accept-charset="UTF-8">
                 <input type="submit" value="&#10134;">
@@ -49,6 +51,12 @@
         <td><input type="text" name="email" placeholder="email" form="addUserForm"></td>
         <td><input type="text" name="username" placeholder="username" form="addUserForm"></td>
         <td><input type="text" name="password" placeholder="password" form="addUserForm"></td>
+        <td>
+            <select name="role" form="addUserForm">
+                <option value="admin">admin</option>
+                <option value="user">user</option>
+            </select>
+        </td>
         <td><input type="submit" value="&#10133;" form="addUserForm"></td>
     </tr>
 </table>
@@ -75,6 +83,13 @@
     <br/>
     <label>
         <input type="text" name="password" placeholder="password">
+    </label>
+    <br/>
+    <label>
+        <select type="text" name="role">
+            <option value="admin">admin</option>
+            <option value="user">user</option>
+        </select>
     </label>
     <br/>
     <br/>

@@ -25,21 +25,21 @@ public class AdminController {
     }
 
     @PostMapping(value = "/admin/addUser")
-    public String addNewUser(@RequestParam String name, @RequestParam String email, @RequestParam String username, @RequestParam String password) {
+    public String addNewUser(@RequestParam String name, @RequestParam String email, @RequestParam String username, @RequestParam String password, @RequestParam String role) {
         User user = new User(name, email, username, password);
-        userService.saveUser(user);
+        userService.saveUser(user, role);
         return "redirect:/admin";
     }
 
     @PostMapping(value = "/admin/updateUser")
-    public String updateUser(@RequestParam Long id, @RequestParam String name, @RequestParam String email, @RequestParam String username, @RequestParam String password) {
+    public String updateUser(@RequestParam Long id, @RequestParam String name, @RequestParam String email, @RequestParam String username, @RequestParam String password, @RequestParam String role) {
         User user = new User(name, email, username, password);
         /*User user = userService.findById(id);
         user.setName(name);
         user.setEmail(email);
         user.setUsername(username);
         user.setPassword(password);*/
-        userService.updateUser(user, id);
+        userService.updateUser(user, id, role);
         return "redirect:/admin";
     }
 

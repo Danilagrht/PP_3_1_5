@@ -9,6 +9,7 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -32,20 +33,28 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
 
     @Override
     @Transactional
-    public void saveUser(User user) {
+    public void saveUser(User user, String role) {
         addRoleToUser("ROLE_USER", user);
+        if ("admin".equals(role)) {
+            addRoleToUser("ROLE_ADMIN", user);
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void updateUser(User user, long id) {
+    public void updateUser(User user, long id, String role) {
         User userForUpdate = findById(id);
         userForUpdate.setName(user.getName());
         userForUpdate.setEmail(user.getEmail());
         userForUpdate.setUsername(user.getUsername());
         userForUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+        userForUpdate.setRoles(new HashSet<>());
+        addRoleToUser("ROLE_USER", userForUpdate);
+        if ("admin".equals(role)) {
+            addRoleToUser("ROLE_ADMIN", userForUpdate);
+        }
         userRepository.save(userForUpdate);
     }
 
