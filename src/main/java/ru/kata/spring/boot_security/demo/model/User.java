@@ -20,7 +20,13 @@ public class User implements UserDetails {
     private Long id;
 
     @Column
-    private String name;
+    private String firstName;
+
+    @Column
+    private String lastName;
+
+    @Column
+    private int age;
 
     @Column
     private String email;
@@ -38,8 +44,10 @@ public class User implements UserDetails {
     @ToString.Exclude
     private Set<Role> roles = new HashSet<>();
 
-    public User(String name, String email, String username, String password) {
-        this.name = name;
+    public User(String firstName, String lastName, int age, String email, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
         this.email = email;
         this.username = username;
         this.password = password;

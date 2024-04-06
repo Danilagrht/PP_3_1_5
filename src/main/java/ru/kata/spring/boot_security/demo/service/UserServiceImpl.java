@@ -46,7 +46,9 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
     @Transactional
     public void updateUser(User user, long id, String role) {
         User userForUpdate = findById(id);
-        userForUpdate.setName(user.getName());
+        userForUpdate.setFirstName(user.getFirstName());
+        userForUpdate.setLastName(user.getLastName());
+        userForUpdate.setAge(user.getAge());
         userForUpdate.setEmail(user.getEmail());
         userForUpdate.setUsername(user.getUsername());
         userForUpdate.setPassword(passwordEncoder.encode(user.getPassword()));

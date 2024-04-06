@@ -20,9 +20,7 @@ public class UserController {
 
     @GetMapping(value = "/user")
     public String getUsers(Model model, Principal principal) {
-        String username = principal.getName();
-        User user = userService.findByUsername(username);
-        model.addAttribute("users", user);
+        model.addAttribute("currentUser", userService.findByUsername(principal.getName()));
         return "user";
     }
 }

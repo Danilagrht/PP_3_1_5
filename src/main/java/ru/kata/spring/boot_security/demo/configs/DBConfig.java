@@ -32,11 +32,11 @@ public class DBConfig implements CommandLineRunner {
         this.roleRepository.save(adminRole);
         this.roleRepository.save(userRole);
 
-        User admin = new User("admin", "example@gmail.com", "admin", "admin");
+        User admin = new User("admin", "admin", 20, "example@gmail.com", "admin", "admin");
         admin.setRoles(new HashSet<>(List.of(adminRole, userRole)));
         admin.setPassword(passwordEncoder.encode("admin"));
 
-        User user = new User("user", "example@gmail.com", "user", "user");
+        User user = new User("user", "user", 20, "example@gmail.com", "user", "user");
         user.setRoles(new HashSet<>(List.of(userRole)));
         user.setPassword(passwordEncoder.encode("user"));
 
