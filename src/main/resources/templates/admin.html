@@ -33,17 +33,17 @@
             <div class="sidebar-sticky pt-2">
                 <ul class="nav flex-column nav-pills">
                     <li class="nav-item">
-                        <button class="nav-link active rounded-2 w-100" data-bs-toggle="tab" data-bs-target="#adminPanel" type="button">Admin</button>
+                        <button class="nav-link active rounded-2 w-100" data-bs-toggle="tab" data-bs-target="#adminPanel" type="button" th:if="${currentUser.hasRole('ROLE_ADMIN')}">Admin</button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link rounded-2 w-100" data-bs-toggle="tab" data-bs-target="#userPanel" type="button">User</button>
+                        <button class="nav-link rounded-2 w-100" data-bs-toggle="tab" data-bs-target="#userPanel" type="button" th:if="${currentUser.hasRole('ROLE_USER')}">User</button>
                     </li>
                 </ul>
             </div>
         </nav>
 
         <div class="col-sm-10 col-12 bg-body-secondary tab-content">
-            <div class="p-3 tab-pane active" id="adminPanel">
+            <div class="p-3 tab-pane active" id="adminPanel" th:if="${currentUser.hasRole('ROLE_ADMIN')}">
                 <h2>Admin panel</h2>
 
                 <ul class="nav nav-tabs">
@@ -154,7 +154,7 @@
                 </div>
             </div>
 
-            <div class="p-3 tab-pane" id="userPanel">
+            <div class="p-3 tab-pane" id="userPanel" th:if="${currentUser.hasRole('ROLE_USER')}">
                 <h2>User information-page</h2>
                 <div class="tab-pane fade show active shadow"
                      style="background-color: #f8f9fa; border: 2px solid #dee2e6; border-radius: .50rem;">
@@ -207,7 +207,7 @@
                     <div class="mb-3 row">
                         <div class="col-lg-7 mx-auto d-flex flex-column align-items-center">
                             <label for="editUsername" class="form-label fw-bold">Username</label>
-                            <input type="text" class="form-control" id="editUsername" disabled>
+                            <input type="text" class="form-control" id="editUsername">
                         </div>
                     </div>
                     <div class="mb-3 row">
