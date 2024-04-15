@@ -34,7 +34,7 @@ $(document).ready(function(){
             age : $('#editAge').val(),
             email: $('#editEmail').val(),
             password: $('#editPassword').val(),
-            role: $('#editRole').val()
+            role: $('#editRole').val().join(', ')
         }
 
         $.ajax({

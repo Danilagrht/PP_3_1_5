@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -63,6 +64,10 @@ public class User implements UserDetails {
         } else {
             return "No roles assigned";
         }
+    }
+
+    public String getRolesString() {
+        return getRoles().stream().map(Role::getName).collect(Collectors.joining(", "));
     }
 
     public boolean hasRole(String roleName) {

@@ -14,11 +14,12 @@
 
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
     <div class="ms-3 m-auto text-white">
+        user
         <strong>
             <th:block th:text="${currentUser.getUsername()}"></th:block>
         </strong>
-        with role:
-        <th:block th:text="${currentUser.getHighRole()}"></th:block>
+        with roles:
+        <th:block th:text="${currentUser.getRolesString()}"></th:block>
     </div>
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
@@ -80,7 +81,7 @@
                                     <td th:text="${user.getLastName()}"></td>
                                     <td th:text="${user.getAge()}"></td>
                                     <td th:text="${user.getEmail()}"></td>
-                                    <td th:text="${user.getHighRole()}"></td>
+                                    <td th:text="${user.getRolesString()}"></td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editUserModal"
                                                 th:data-id="${user.getId()}"
@@ -178,7 +179,7 @@
                                 <td th:text="${currentUser.getLastName()}"></td>
                                 <td th:text="${currentUser.getAge()}"></td>
                                 <td th:text="${currentUser.getEmail()}"></td>
-                                <td th:text="${currentUser.getHighRole()}"></td>
+                                <td th:text="${currentUser.getRolesString()}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -243,7 +244,7 @@
                     <div class="mb-3 row">
                         <div class="col-lg-7 mx-auto d-flex flex-column align-items-center">
                             <label for="editRole" class="form-label fw-bold">Role</label>
-                            <select class="form-select" id="editRole" size="2">
+                            <select class="form-select" id="editRole" multiple size="2">
                                 <option value="ROLE_ADMIN">ADMIN</option>
                                 <option value="ROLE_USER">USER</option>
                             </select>

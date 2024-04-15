@@ -33,18 +33,22 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
 
     @Override
     @Transactional
-    public void saveUser(User user, String role) {
-        addRoleToUser("ROLE_USER", user);
+    public void saveUser(User user, String inputRoles) {
+        String[] roles = inputRoles.split(",\\s*");
+        for (String role : roles) {
+            addRoleToUser(role, user);
+        }
+        /*addRoleToUser("ROLE_USER", user);
         if ("admin".equals(role)) {
             addRoleToUser("ROLE_ADMIN", user);
-        }
+        }*/
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void updateUser(User user, long id, String role) {
+    public void updateUser(User user, long id, String inputRoles) {
         User userForUpdate = findById(id);
         userForUpdate.setFirstName(user.getFirstName());
         userForUpdate.setLastName(user.getLastName());
@@ -53,9 +57,9 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
         userForUpdate.setUsername(user.getUsername());
         userForUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
         userForUpdate.setRoles(new HashSet<>());
-        addRoleToUser("ROLE_USER", userForUpdate);
-        if ("admin".equals(role)) {
-            addRoleToUser("ROLE_ADMIN", userForUpdate);
+        String[] roles = inputRoles.split(",\\s*");
+        for (String role : roles) {
+            addRoleToUser(role, userForUpdate);
         }
         userRepository.save(userForUpdate);
     }
