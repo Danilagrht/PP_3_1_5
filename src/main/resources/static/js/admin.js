@@ -101,7 +101,7 @@ $(document).ready(function(){
             age : $('#newAge').val(),
             email: $('#newEmail').val(),
             password: $('#newPassword').val(),
-            role: $('#newRole').val()
+            role: $('#newRole').val().join(', ')
         }
 
         $.ajax({
