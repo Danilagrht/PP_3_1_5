@@ -1,11 +1,15 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserService {
     List<User> getUsers();
+
+    List<User> getCurrentUser(Principal principal);
 
     void saveUser(User user, String role);
 

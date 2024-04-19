@@ -9,6 +9,8 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -29,6 +31,14 @@ public class UserServiceImpl implements UserService/*, UserDetailsService*/ {
     @Transactional(readOnly = true)
     public List<User> getUsers() {
         return userRepository.findAll(Sort.by("id"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> getCurrentUser(Principal principal) {
+        List<User> currentUser = new ArrayList<>();
+        currentUser.add(findByUsername(principal.getName()));
+        return currentUser;
     }
 
     @Override
