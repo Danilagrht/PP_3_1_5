@@ -34,7 +34,7 @@ public class AdminController {
         return userService.getUsers();
     }
 
-    @GetMapping(value = "/admin/currentUser")
+    @GetMapping(value = "/user/currentUser")
     public List<User> getCurrentUser(Principal principal) {
         return userService.getCurrentUser(principal);
     }

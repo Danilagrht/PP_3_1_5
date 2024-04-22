@@ -44,10 +44,11 @@ $(document).ready(function () {
             const response = await $.ajax({
                 type: 'POST', url: '/admin/updateUser', data: formData
             });
-            window.location.href = '/admin';
         } catch (error) {
             console.error('Error:', error);
         }
+
+        await updateUsersTable();
     })
 })
 
@@ -81,16 +82,19 @@ $(document).ready(function () {
             const response = await $.ajax({
                 type: 'POST', url: '/admin/deleteUser', data: formData
             });
-            window.location.href = '/admin';
         } catch (error) {
             console.error('Error:', error);
         }
+
+        await updateUsersTable();
     })
 })
 
 //POST запрос на добавление пользователя
 $(document).ready(function () {
-    $('#addNewUserSubmit').click(async function () {
+    $('#addNewUserSubmit').click(async function (event) {
+        event.preventDefault();
+
         let formData = {
             username: $('#newUsername').val(),
             firstName: $('#newFirstName').val(),
@@ -105,10 +109,20 @@ $(document).ready(function () {
             const response = await $.ajax({
                 type: 'POST', url: '/admin/addUser', data: formData
             });
-            window.location.href = '/admin';
         } catch (error) {
             console.error('Error:', error);
         }
+
+        await updateUsersTable();
+
+        let userTable = document.getElementById("userTable");
+        userTable.classList.add("active", "show");
+        let newUser = document.getElementById("newUser");
+        newUser.classList.remove("active")
+        let userTableTab = document.getElementById("userTableTab");
+        userTableTab.classList.add("active");
+        let newUserTab = document.getElementById("newUserTab");
+        newUserTab.classList.remove("active");
     })
 })
 
@@ -138,42 +152,91 @@ $(document).ready(function () {
 });*/
 
 //GET запрос данных авторизированного пользователя
-$(document).ready(function() {
-    fetch('/admin/currentUser')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data[0].roles);
-            console.log(data);
+$(document).ready(async function() {
+    try {
+        const response = await fetch('/user/currentUser');
+        const data = await response.json();
 
-            let usernameHeader = document.getElementById("usernameHeader");
-            usernameHeader.textContent = data[0].username;
+        console.log(data[0].roles);
+        console.log(data);
 
-            let rolesHeader = document.getElementById("rolesHeader");
-            rolesHeader.textContent = data[0].rolesString;
+        let usernameHeader = document.getElementById("usernameHeader");
+        usernameHeader.textContent = data[0].username;
 
-            let sidebarAdminButton = document.getElementById("sidebarAdminButton");
-            let adminPanel = document.getElementById("adminPanel");
-            let sidebarUserButton = document.getElementById("sidebarUserButton");
-            let userPanel = document.getElementById("userPanel");
+        let rolesHeader = document.getElementById("rolesHeader");
+        rolesHeader.textContent = data[0].rolesString;
 
-            if (hasRole(data[0].roles, "ROLE_ADMIN")) {
-                sidebarAdminButton.style.display = "block";
-                sidebarAdminButton.classList.add("active");
-                //adminPanel.style.display = "block";
-                adminPanel.classList.add("active");
-            } else if (hasRole(data[0].roles, "ROLE_USER")) {
-                //sidebarUserButton.style.display = "block";
-                //userPanel.style.display = "block";
-                sidebarUserButton.classList.add("active");
-                userPanel.classList.add("active");
-            }
+        let sidebarAdminButton = document.getElementById("sidebarAdminButton");
+        let adminPanel = document.getElementById("adminPanel");
+        let sidebarUserButton = document.getElementById("sidebarUserButton");
+        let userPanel = document.getElementById("userPanel");
 
-            if (hasRole(data[0].roles, "ROLE_USER")) {
-                sidebarUserButton.style.display = "block";
-                //userPanel.style.display = "block";
-            }
+        if (hasRole(data[0].roles, "ROLE_ADMIN")) {
+            sidebarAdminButton.style.display = "block";
+            sidebarAdminButton.classList.add("active");
+            //adminPanel.style.display = "block";
+            adminPanel.classList.add("active");
+        } else if (hasRole(data[0].roles, "ROLE_USER")) {
+            //sidebarUserButton.style.display = "block";
+            //userPanel.style.display = "block";
+            sidebarUserButton.classList.add("active");
+            userPanel.classList.add("active");
+        }
 
-            let currentUserTableData = document.getElementById("currentUserTableData");
+        if (hasRole(data[0].roles, "ROLE_USER")) {
+            sidebarUserButton.style.display = "block";
+            //userPanel.style.display = "block";
+        }
+
+        let currentUserTableData = document.getElementById("currentUserTableData");
+        let newRow = document.createElement("tr");
+
+        let idCeil = document.createElement("td");
+        let firstNameCeil = document.createElement("td");
+        let lastNameCeil = document.createElement("td");
+        let ageCeil = document.createElement("td");
+        let emailCeil = document.createElement("td");
+        let roleCeil = document.createElement("td");
+
+        let idText = document.createTextNode(data[0].id);
+        let firstNameText = document.createTextNode(data[0].firstName);
+        let lastNameText = document.createTextNode(data[0].lastName);
+        let ageText = document.createTextNode(data[0].age);
+        let emailText = document.createTextNode(data[0].email);
+        let roleText = document.createTextNode(data[0].rolesString);
+
+        idCeil.appendChild(idText);
+        firstNameCeil.appendChild(firstNameText);
+        lastNameCeil.appendChild(lastNameText);
+        ageCeil.appendChild(ageText);
+        emailCeil.appendChild(emailText);
+        roleCeil.appendChild(roleText);
+
+        newRow.appendChild(idCeil);
+        newRow.appendChild(firstNameCeil);
+        newRow.appendChild(lastNameCeil);
+        newRow.appendChild(ageCeil);
+        newRow.appendChild(emailCeil);
+        newRow.appendChild(roleCeil);
+
+        currentUserTableData.appendChild(newRow);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+//GET запрос данных о всех пользователях
+$(document).ready(updateUsersTable());
+
+async function updateUsersTable() {
+    try {
+        const response = await fetch('/admin/users');
+        const data = await response.json();
+        console.log(data);
+
+        let userTableData = document.getElementById("userTableData");
+        userTableData.innerHTML = '';
+        for (let i = 0; i < data.length; i++) {
             let newRow = document.createElement("tr");
 
             let idCeil = document.createElement("td");
@@ -182,13 +245,29 @@ $(document).ready(function() {
             let ageCeil = document.createElement("td");
             let emailCeil = document.createElement("td");
             let roleCeil = document.createElement("td");
+            let editButtonCeil = document.createElement("td");
+            let deleteButtonCeil = document.createElement("td");
 
-            let idText = document.createTextNode(data[0].id);
-            let firstNameText = document.createTextNode(data[0].firstName);
-            let lastNameText = document.createTextNode(data[0].lastName);
-            let ageText = document.createTextNode(data[0].age);
-            let emailText = document.createTextNode(data[0].email);
-            let roleText = document.createTextNode(data[0].rolesString);
+            let idText = document.createTextNode(data[i].id);
+            let firstNameText = document.createTextNode(data[i].firstName);
+            let lastNameText = document.createTextNode(data[i].lastName);
+            let ageText = document.createTextNode(data[i].age);
+            let emailText = document.createTextNode(data[i].email);
+            let roleText = document.createTextNode(data[i].rolesString);
+
+            let editButton = document.createElement("button");
+            editButton.textContent = "Edit";
+            editButton.classList.add("btn", "btn-sm", "btn-outline-primary");
+            editButton.setAttribute("data-bs-toggle", "modal");
+            editButton.setAttribute("data-bs-target", "#editUserModal");
+            editButton.id = "editButtonNumber" + i;
+
+            let deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.classList.add("btn", "btn-sm", "btn-outline-danger");
+            deleteButton.setAttribute("data-bs-toggle", "modal");
+            deleteButton.setAttribute("data-bs-target", "#deleteUserModal");
+            deleteButton.id = "deleteButtonNumber" + i;
 
             idCeil.appendChild(idText);
             firstNameCeil.appendChild(firstNameText);
@@ -196,6 +275,8 @@ $(document).ready(function() {
             ageCeil.appendChild(ageText);
             emailCeil.appendChild(emailText);
             roleCeil.appendChild(roleText);
+            editButtonCeil.appendChild(editButton);
+            deleteButtonCeil.appendChild(deleteButton);
 
             newRow.appendChild(idCeil);
             newRow.appendChild(firstNameCeil);
@@ -203,76 +284,15 @@ $(document).ready(function() {
             newRow.appendChild(ageCeil);
             newRow.appendChild(emailCeil);
             newRow.appendChild(roleCeil);
+            newRow.appendChild(editButtonCeil);
+            newRow.appendChild(deleteButtonCeil);
 
-            currentUserTableData.appendChild(newRow);
-        })
-        .catch(error => console.error('Error:', error));
-});
-
-//GET запрос данных о всех пользователях
-$(document).ready(function() {
-    fetch('/admin/users')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-
-            let userTableData = document.getElementById("userTableData");
-            for (let i = 0; i < data.length; i++) {
-                let newRow = document.createElement("tr");
-
-                let idCeil = document.createElement("td");
-                let firstNameCeil = document.createElement("td");
-                let lastNameCeil = document.createElement("td");
-                let ageCeil = document.createElement("td");
-                let emailCeil = document.createElement("td");
-                let roleCeil = document.createElement("td");
-                let editButtonCeil = document.createElement("td");
-                let deleteButtonCeil = document.createElement("td");
-
-                let idText = document.createTextNode(data[i].id);
-                let firstNameText = document.createTextNode(data[i].firstName);
-                let lastNameText = document.createTextNode(data[i].lastName);
-                let ageText = document.createTextNode(data[i].age);
-                let emailText = document.createTextNode(data[i].email);
-                let roleText = document.createTextNode(data[i].rolesString);
-
-                let editButton = document.createElement("button");
-                editButton.textContent = "Edit";
-                editButton.classList.add("btn", "btn-sm", "btn-outline-primary");
-                editButton.setAttribute("data-bs-toggle", "modal");
-                editButton.setAttribute("data-bs-target", "#editUserModal");
-                editButton.id = "editButtonNumber" + i;
-
-                let deleteButton = document.createElement("button");
-                deleteButton.textContent = "Delete";
-                deleteButton.classList.add("btn", "btn-sm", "btn-outline-danger");
-                deleteButton.setAttribute("data-bs-toggle", "modal");
-                deleteButton.setAttribute("data-bs-target", "#deleteUserModal");
-                deleteButton.id = "deleteButtonNumber" + i;
-
-                idCeil.appendChild(idText);
-                firstNameCeil.appendChild(firstNameText);
-                lastNameCeil.appendChild(lastNameText);
-                ageCeil.appendChild(ageText);
-                emailCeil.appendChild(emailText);
-                roleCeil.appendChild(roleText);
-                editButtonCeil.appendChild(editButton);
-                deleteButtonCeil.appendChild(deleteButton);
-
-                newRow.appendChild(idCeil);
-                newRow.appendChild(firstNameCeil);
-                newRow.appendChild(lastNameCeil);
-                newRow.appendChild(ageCeil);
-                newRow.appendChild(emailCeil);
-                newRow.appendChild(roleCeil);
-                newRow.appendChild(editButtonCeil);
-                newRow.appendChild(deleteButtonCeil);
-
-                userTableData.appendChild(newRow);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-});
+            userTableData.appendChild(newRow);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 
 function hasRole(rolesArray, roleToCheck) {
     for (let i = 0; i < rolesArray.length; i++) {
